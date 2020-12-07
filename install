@@ -529,4 +529,4 @@ z
 
 cd
 rm install
-rm -f /root/dns
+rm -f /root/install
