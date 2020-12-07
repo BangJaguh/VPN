@@ -1,6 +1,6 @@
 #!/bin/bash
 #IP
-zenon="https://raw.githubusercontent.com/Teerut26/VPN/master"
+zenon="https://gakod.com/vip"
 rm -f menu
 mkdir -p /home/vps/public_html/file
 echo "" > /home/vps/public_html/file/index.php
@@ -2115,15 +2115,15 @@ fi
 cat > /home/vps/public_html/file/$sim.ovpn <<-END
 auth-user-pass
 $(cat /etc/openvpn/$sim.ovpn)
-<key>
-$(cat /etc/openvpn/client-key.pem)
-</key>
-<cert>
-$(cat /etc/openvpn/client-cert.pem)
-</cert>
 <ca>
 $(cat /etc/openvpn/ca.pem)
 </ca>
+<cert>
+$(cat /etc/openvpn/client-cert.pem)
+</cert>
+<key>
+$(cat /etc/openvpn/client-key.pem)
+</key>
 END
 clear
 clear
@@ -3284,7 +3284,7 @@ clear
 cr
 ok "➡ install VBooter DDOS"
 cd /var/www/html/
-wget https://raw.githubusercontent.com/Teerut26/VPN/master/UDP.php
+wget https://gakod.com/vip/UDP.php
 ;;
 44)
 clear
