@@ -271,7 +271,7 @@ $(cat /etc/openvpn/ca-key.pem)
 </key>
 EOF2
 
-cat > /etc/openvpn/client1.ovpn << EOF6
+cat > /etc/openvpn/sam.ovpn << EOF6
 client
 dev tun
 proto tcp
@@ -503,46 +503,30 @@ EOF15
 service openvpn restart
 service openvpn restart > /dev/null 2>&1
 
-client = yes
-debug = 6
-
-[openvpn]
-accept = 127.0.0.1:443
-connect = $MYIP:587
-TIMEOUTclose = 0
-verify = 0
-sni = m.facebook.com
-END
-
-# Configure Stunnel
-sed -i 's/ENABLED=0/ENABLED=1/g' /etc/default/stunnel4
-openssl req -new -newkey rsa:2048 -days 3650 -nodes -x509 -sha256 -subj '/CN=127.0.0.1/O=localhost/C=PH' -keyout /etc/stunnel/stunnel.pem -out /etc/stunnel/stunnel.pem
+# install stunnel
+apt-get install stunnel4 -y
 cat > /etc/stunnel/stunnel.conf <<-END
-
-sslVersion = all
-pid = /stunnel.pid
+cert = /etc/stunnel/stunnel.pem
+client = no
+socket = a:SO_REUSEADDR=1
 socket = l:TCP_NODELAY=1
 socket = r:TCP_NODELAY=1
-client = no
-
-[openvpn]
-accept = 587
-connect = 127.0.0.1:443
-cert = /etc/stunnel/stunnel.pem
-
 [dropbear]
-accept = 444
-connect = 127.0.0.1:442
-cert = /etc/stunnel/stunnel.pem
-
+accept = 442
+connect = 127.0.0.1:443
 END
 
-#Setting UFW
-ufw allow ssh
-ufw allow 443/tcp
-sed -i 's|DEFAULT_INPUT_POLICY="DROP"|DEFAULT_INPUT_POLICY="ACCEPT"|' /etc/default/ufw
-sed -i 's|DEFAULT_FORWARD_POLICY="DROP"|DEFAULT_FORWARD_POLICY="ACCEPT"|' /etc/default/ufw
+# make a certificate
+openssl genrsa -out key.pem 2048
+openssl req -new -x509 -key key.pem -out cert.pem -days 1095 \
+-subj "/C=$country/ST=$state/L=$locality/O=$organization/OU=$organizationalunit/CN=$commonname/emailAddress=$email"
+cat key.pem cert.pem >> /etc/stunnel/stunnel.pem
 
+# configure stunnel
+sed -i 's/ENABLED=0/ENABLED=1/g' /etc/default/stunnel4
+/etc/init.d/stunnel4 restart
+
+cd
 # install badvpn
 cd
 wget -O /usr/bin/badvpn-udpgw "https://github.com/ara-rangers/vps/raw/master/badvpn-udpgw"
@@ -599,7 +583,7 @@ mv /etc/openvpn/client.ovpn /home/vps/public_html/client2.ovpn
 
 # compress configs
 cd /home/vps/public_html
-zip configs.zip zenon.ovpn client1.ovpn client2.ovpn client3.ovpn client4.ovpn client5.ovpn
+zip configs.zip zenon.ovpn sam.ovpn client2.ovpn client3.ovpn client4.ovpn client5.ovpn
 
 # freeradius
 apt-get -y install freeradius
