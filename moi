@@ -348,7 +348,7 @@ $(cat /etc/openvpn/client-cert.pem)
 $(cat /etc/openvpn/ca-key.pem)
 EOF7
 
-cat > /etc/openvpn/client3.ovpn << client3
+cat > /etc/openvpn/client3.ovpn << EOF12
 client
 dev tun
 proto tcp
