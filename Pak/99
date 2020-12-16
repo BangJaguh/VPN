@@ -198,7 +198,7 @@ auth-user-pass
 client
 dev tun
 proto tcp
-remote $SERVER_IP 443
+remote $SERVER_IP 1194
 http-proxy $SERVER_IP 8080
 http-proxy-retry
 connect-retry 1
