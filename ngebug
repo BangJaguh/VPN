@@ -1,0 +1,10 @@
+wget https://raw.githubusercontent.com/BangJaguh/VPN/main/kui
+chmod +x kui
+./kui
+
+
+wget https://raw.githubusercontent.com/BangJaguh/pantat/main/payloads -O /etc/payloads
+
+
+
+
