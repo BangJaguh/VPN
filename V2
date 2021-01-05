@@ -40,7 +40,14 @@ service openvpn restart
 echo "=============================="
 echo "       SQUID "
 echo "=============================="
-wget https://raw.githubusercontent.com/BangJagu/on/main/sqx.sh && bash sqx.sh
+cd
+# squid3
+apt-get -y install squid3
+wget -O /etc/squid3/squid.conf "https://raw.githubusercontent.com/padubang/mambang/main/squid.conf"
+wget -O /etc/squid/squid.conf "https://raw.githubusercontent.com/padubang/mambang/main/squid.conf"
+sed -i "s/ipserver/$myip/g" /etc/squid3/squid.conf
+sed -i "s/ipserver/$myip/g" /etc/squid/squid.conf
+sed -i "s/ipserver/$myip/g" /etc/squid3/squid.conf
 wget https://raw.githubusercontent.com/jm051484/AutoPrivoxy/master/AutoPrivoxy.sh && bash AutoPrivoxy.sh
 echo -e "\e[40;38;5;101m " 
 echo "=============================="
